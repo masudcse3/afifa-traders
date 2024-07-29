@@ -1,0 +1,35 @@
+# @format
+
+version: "3.8"
+services:
+  database:
+    image: mongo:latest
+    container_name: database
+    restart: on-failure
+    ports:
+      - "27037:27017"
+    volumes:
+      - afifa_db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      AUTH: admin
+    networks:
+      - afifa_network
+  afifa_rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: afiafa_rabbitmq
+    restart: on-failure
+    ports:
+      - "15673:15672"
+      - "5673:5672"
+    volumes:
+      - afifa_rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - afifa_network
+volumes:
+  afifa_db:
+  afifa_rabbitmq_data:
+networks:
+  afifa_network:
+    driver: bridge
