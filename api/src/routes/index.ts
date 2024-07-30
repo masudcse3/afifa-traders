@@ -53,6 +53,7 @@ import {
   getAllLoans,
   getLoanDetails,
 } from "@/controllers/loan";
+import { dashboard } from "@/controllers/dashboard";
 const router = express.Router();
 
 // Share holder routes
@@ -99,4 +100,9 @@ router.route("/profit/:id").patch(calculateProfit);
 router.route("/loans/loaner").post(addLoaner);
 router.route("/loans").post(addLoan).get(getAllLoans);
 router.route("/loans/:id").patch(payLoan).get(getLoanDetails);
+
+// Dashbaord routes
+router.route("/dashboard").get(dashboard);
+
+module.exports = router;
 export default router;

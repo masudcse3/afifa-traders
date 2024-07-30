@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { authMiddleware } from "@/middlewares/auth";
 import router from "@/routes";
-import { login } from "./controllers/auth";
+import { checkAuth, login } from "./controllers/auth";
 import { setup } from "@/controllers/setup";
 dotenv.config();
 
@@ -25,7 +25,10 @@ const app = express();
 
 app.use(
   morgan("dev"),
-  cors(),
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
   express.json(),
   cookieParser(),
   express.urlencoded({ extended: true })
@@ -37,6 +40,7 @@ app.get("/api/v1/health", (req: Request, res: Response) => {
 app.post("/api/v1/setup", setup);
 // login route
 app.post("/api/v1/login", login);
+app.get("/api/v1/check-auth", checkAuth);
 // handle routes
 app.use("/api/v1", authMiddleware, router);
 // 404 error handler
