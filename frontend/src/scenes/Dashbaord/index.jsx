@@ -57,7 +57,7 @@ const Dashboard = () => {
   const weightConvert = (weight) => {
     const weightInPoint = weight / 40;
     const mon = Math.trunc(weightInPoint);
-    const kg = parseInt((weightInPoint - mon) * 40);
+    const kg = Number((weightInPoint - mon) * 40);
     return `${mon.toLocaleString("bn-BD")} মন ${kg.toLocaleString(
       "bn-BD"
     )} কেজি`;

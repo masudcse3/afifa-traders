@@ -8,6 +8,7 @@ const username: string = process.env.DB_USERNAME || "";
 const password: string = process.env.DB_PASSWORD || "";
 dbUrl = dbUrl?.replace("<username>", username);
 dbUrl = dbUrl?.replace("<password>", password);
+console.log("Database", dbUrl);
 
 export const connection = async () => {
   try {

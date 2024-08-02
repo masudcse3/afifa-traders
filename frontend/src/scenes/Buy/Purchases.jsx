@@ -234,7 +234,7 @@ const Purchases = () => {
                 name="weight"
                 value={weight}
                 onChange={handleCalculateWeight}
-                type="text"
+                type="number"
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -325,7 +325,7 @@ const Purchases = () => {
           </Box>
         </Box>
       )}
-      {open && <ToastMessage message={"পণ্য ক্রয় সফল হয়েছে। "} />}
+      {open && <ToastMessage message={"পণ্য ক্রয় সফল হয়েছে। "} open={open} />}
     </>
   );
 };
