@@ -26,7 +26,7 @@ const app = express();
 app.use(
   morgan("dev"),
   cors({
-    origin: "https://afifa-online.vercel.app",
+    origin: "https://afifa-traders.vercel.app",
     credentials: true,
   }),
   express.json(),
