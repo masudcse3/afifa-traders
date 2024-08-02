@@ -9,8 +9,9 @@ export const dashboard = async (
   next: NextFunction
 ) => {
   try {
-    const { accounts, stocks, expenses, loans } = await dashboardService();
-    res.json({ accounts, stocks, expenses, loans });
+    const { accounts, stocks, expenses, loans, expensesToday } =
+      await dashboardService();
+    res.json({ accounts, stocks, expenses, loans, expensesToday });
   } catch (error) {
     next(error);
   }

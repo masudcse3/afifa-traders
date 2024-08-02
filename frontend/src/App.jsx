@@ -11,6 +11,9 @@ import Authentication from "./components/Auth/Authentication";
 import Dashboard from "./scenes/Dashbaord";
 import Login from "./scenes/Auth/Login";
 import NotFound from "./scenes/global/NotFound";
+
+import Products from "./scenes/Product/Products";
+import Purchases from "./scenes/Buy/Purchases";
 function App() {
   const [theme, colorMode] = useMode();
   return (
@@ -25,6 +28,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<Authentication />}>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/purchases" element={<Purchases />} />
               </Route>
 
               <Route path="/*" element={<NotFound />} />

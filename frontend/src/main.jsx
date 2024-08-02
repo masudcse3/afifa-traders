@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
 import store from "./store/store.js";
 import App from "./App.jsx";
+import "./App.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <StoreProvider store={store}>

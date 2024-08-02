@@ -130,27 +130,21 @@ const Header = () => {
         onClose={handleMenuClose}
         sx={{ width: 200, "& .MuiDrawer-paper": { width: 200 } }}
       >
+        <Typography variant="h5" p="10px" align="center">
+          AFIFA TRADERS
+        </Typography>
         <List>
-          {["Menu Item 1", "Menu Item 2", "Menu Item 3"].map((text, index) => (
-            <React.Fragment key={text}>
-              <ListItem button onClick={() => handleSubMenuClick(index)}>
-                <ListItemText primary={text} />
-                {openSubMenu === index ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={openSubMenu === index} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {["Sub Item 1", "Sub Item 2", "Sub Item 3"].map((subText) => (
-                    <ListItem button key={subText} sx={{ pl: 4 }}>
-                      <ListItemText primary={subText} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Collapse>
-            </React.Fragment>
-          ))}
-        </List>
-        <List>
-          {["Menu Item 1", "Menu Item 2", "Menu Item 3"].map((text, index) => (
+          {[
+            "Share Holder",
+            "Products",
+            "Purchases",
+            "Stock",
+            "Party",
+            "Sales",
+            "Accounts",
+            "Payment",
+            "Expenses",
+          ].map((text, index) => (
             <React.Fragment key={text}>
               <ListItem button onClick={() => handleSubMenuClick(index)}>
                 <ListItemText primary={text} />

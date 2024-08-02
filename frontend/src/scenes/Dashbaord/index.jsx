@@ -5,6 +5,9 @@ import axios from "axios";
 import Spinner from "../../components/utils/Spinner";
 import Card from "../../components/Dashboard/Card";
 import { Grid, useTheme } from "@mui/material";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import AddBusinessOutlinedIcon from "@mui/icons-material/AddBusinessOutlined";
 import { tokens } from "../../theme";
 const Dashboard = () => {
   const theme = useTheme();
@@ -14,6 +17,7 @@ const Dashboard = () => {
     accounts: { cash: 0, check: 0, due: 0 },
     stocks: [],
     expenses: [],
+    expensesToday: [],
     loans: [],
   });
   const [loading, setLoading] = useState(true);
@@ -44,6 +48,10 @@ const Dashboard = () => {
     (acc, cur) => (acc += cur.amount),
     0
   );
+  const expenseToday = data.expensesToday.reduce(
+    (acc, cur) => (acc += cur.amount),
+    0
+  );
   const loanAmount = data.loans.reduce((acc, cur) => (acc += cur.amount), 0);
   const total = cash + check + due + stockAmount + loanAmount;
   const weightConvert = (weight) => {
@@ -56,61 +64,73 @@ const Dashboard = () => {
   };
   return (
     <>
-      <div>
-        {loading && <Spinner />}
-        {error && <p>Error: {error}</p>}
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item sx={12} sm={6} md={3}>
-            <Card
-              title="অ্যাকাউন্ট"
-              border={colors.blueAccent[400]}
-              content={
-                <div>
-                  <h3>ক্যাশঃ {cash.toLocaleString("bn-BD")} /=</h3>
-                  <h3>চেকঃ {check.toLocaleString("bn-BD")}</h3>
-                  <h3>বকেয়াঃ {due.toLocaleString("bn-BD")}</h3>
-                  <h3>স্টকঃ {stockAmount.toLocaleString("bn-BD")}</h3>
-                  <h3>কর্যঃ {loanAmount.toLocaleString("bn-BD")}</h3>
-                  <hr />
-                  <h2>মোটঃ {total.toLocaleString("bn-BD")}</h2>
-                </div>
-              }
-            />
-          </Grid>
-          <Grid item sx={12} sm={6} md={3}>
-            <Card
-              title="স্টক"
-              border={colors.redAccent[400]}
-              content={data.stocks.map((stock, index) => (
-                <div key={index}>
-                  <h3 style={{ fontWeight: "400" }}>
-                    {stock.product}: {weightConvert(stock.weight)}
-                  </h3>
-                </div>
-              ))}
-            />
-          </Grid>
-          <Grid item sx={12} sm={6} md={3}>
-            <Card
-              title="খরচ"
-              border={colors.blueAccent[400]}
-              content={
-                <div>
-                  <h3>আজ: {expensesAmount.toLocaleString("bn-BD")}</h3>
-                  <h3>এই মাস: {expensesAmount.toLocaleString("bn-BD")}</h3>
-                </div>
-              }
-            />
-          </Grid>
-          <Grid item sx={12} sm={6} md={3}>
-            <Card
-              title="Accounts"
-              border={colors.blueAccent[400]}
-              content={<h2>Hello World</h2>}
-            />
-          </Grid>
+      {loading && <Spinner />}
+      {error && <p>Error: {error}</p>}
+      <Grid container spacing={1} justifyContent="center">
+        <Grid item sm={12} md={4}>
+          <Card
+            icon={<AccountBalanceWalletOutlinedIcon />}
+            title={`অ্যাকাউন্টঃ  ${total.toLocaleString("bn-BD")}`}
+            bg={colors.primary["400"]}
+            content={
+              <div className="title-text">
+                <h3>
+                  <b>ক্যাশঃ </b>
+                  {cash.toLocaleString("bn-BD")}
+                </h3>
+                <h3>
+                  <b>চেকঃ </b>
+                  {check.toLocaleString("bn-BD")}
+                </h3>
+                <h3>
+                  <b>স্টকঃ </b>
+                  {stockAmount.toLocaleString("bn-BD")}
+                </h3>
+                <h3>
+                  <b>বাকিঃ </b>
+                  {due.toLocaleString("bn-BD")}
+                </h3>
+                <h3>
+                  <b>কর্যঃ </b>
+                  {loanAmount.toLocaleString("bn-BD")}
+                </h3>
+              </div>
+            }
+          />
         </Grid>
-      </div>
+        <Grid item sx={12} sm={12} md={4}>
+          <Card
+            title="স্টক"
+            bg={colors.primary[400]}
+            icon={<Inventory2OutlinedIcon />}
+            content={data.stocks.map((stock, index) => (
+              <div key={index} className="title-text">
+                <h3>
+                  <b> {stock.product}:</b> {weightConvert(stock.weight)}
+                  <br />
+                  <b>মূল্যঃ </b>
+                  {stock.cash.toLocaleString("bn-BD")} টাকা <br />
+                  <b>পড়তাঃ </b>
+                  {stock.porta.toLocaleString("bn-BD")} টাকা
+                </h3>
+              </div>
+            ))}
+          />
+        </Grid>
+        <Grid item sx={12} sm={12} md={4}>
+          <Card
+            title="খরচ"
+            bg={colors.primary[400]}
+            icon={<AddBusinessOutlinedIcon />}
+            content={
+              <div className="title-text">
+                <h3>আজ: {expenseToday.toLocaleString("bn-BD")}</h3>
+                <h3>এই মাস: {expensesAmount.toLocaleString("bn-BD")}</h3>
+              </div>
+            }
+          />
+        </Grid>
+      </Grid>
     </>
   );
 };
