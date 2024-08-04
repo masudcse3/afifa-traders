@@ -1,15 +1,10 @@
 /** @format */
 
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import {
   AppBar,
   Toolbar,
   IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Collapse,
   Menu,
   MenuItem,
   Typography,
@@ -17,18 +12,19 @@ import {
   useTheme,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { Menu as MenuIcon, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Menu as MenuIcon } from "@mui/icons-material";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
 import { ColorModeContext, tokens } from "../../theme";
+import MainMenu from "./MainMenu";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
-  const [openSubMenu, setOpenSubMenu] = useState(null);
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -47,10 +43,6 @@ const Header = () => {
 
   const handleUserMenuClose = () => {
     setUserMenuAnchorEl(null);
-  };
-
-  const handleSubMenuClick = (index) => {
-    setOpenSubMenu(openSubMenu === index ? null : index);
   };
 
   return (
@@ -124,45 +116,7 @@ const Header = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer
-        anchor="left"
-        open={menuOpen}
-        onClose={handleMenuClose}
-        sx={{ width: 200, "& .MuiDrawer-paper": { width: 200 } }}
-      >
-        <Typography variant="h5" p="10px" align="center">
-          AFIFA TRADERS
-        </Typography>
-        <List>
-          {[
-            "Share Holder",
-            "Products",
-            "Purchases",
-            "Stock",
-            "Party",
-            "Sales",
-            "Accounts",
-            "Payment",
-            "Expenses",
-          ].map((text, index) => (
-            <React.Fragment key={text}>
-              <ListItem button onClick={() => handleSubMenuClick(index)}>
-                <ListItemText primary={text} />
-                {openSubMenu === index ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={openSubMenu === index} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {["Sub Item 1", "Sub Item 2", "Sub Item 3"].map((subText) => (
-                    <ListItem button key={subText} sx={{ pl: 4 }}>
-                      <ListItemText primary={subText} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Collapse>
-            </React.Fragment>
-          ))}
-        </List>
-      </Drawer>
+      <MainMenu open={menuOpen} onClose={handleMenuClose} />
     </>
   );
 };

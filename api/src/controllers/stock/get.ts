@@ -13,7 +13,6 @@ export const getStock = async (
       category: string;
       product: string;
     };
-    console.log(category, product);
 
     const stocks = await getStockService({ category, product });
     if (!stocks) {

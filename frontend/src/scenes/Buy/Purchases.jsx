@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   useTheme,
   Box,
@@ -27,6 +27,8 @@ import ToastMessage from "../../components/utils/Toast";
 const Purchases = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  // use ref for focus weight
+  const inputRef = useRef(null);
   // initail state
   const initialData = {
     name: "",
@@ -69,6 +71,7 @@ const Purchases = () => {
       },
     ]);
     setWeight("");
+    inputRef.current.focus();
   };
   useEffect(() => {
     const calculatedWeight = calculateWeight.slice(1);
@@ -121,7 +124,7 @@ const Purchases = () => {
   };
   const handleDelete = (id) => {
     const result = calculateWeight.filter((item) => item.no !== id);
-    console.log(result);
+
     setCalculateWeight(result);
   };
   // get all product names
@@ -134,10 +137,12 @@ const Purchases = () => {
     };
     getProductsName();
   }, []);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-      {loading && <Spinner />}
       <Box
         sx={{
           backgroundColor: colors.primary["400"],
@@ -187,7 +192,7 @@ const Purchases = () => {
                 name="phone"
                 value={data.phone}
                 onChange={handleChange}
-                type="text"
+                type="number"
                 variant="outlined"
                 color="secondary"
                 fullWidth
@@ -239,6 +244,7 @@ const Purchases = () => {
                 color="secondary"
                 fullWidth
                 size="small"
+                ref={inputRef}
               />
             </Grid>
             <Grid item xs={3} sm={3} md={4}>
@@ -274,6 +280,7 @@ const Purchases = () => {
           </Grid>
         </form>
       </Box>
+      {loading && <Spinner />}
       {calculateWeight.length > 1 && (
         <Box
           sx={{
@@ -325,7 +332,13 @@ const Purchases = () => {
           </Box>
         </Box>
       )}
-      {open && <ToastMessage message={"পণ্য ক্রয় সফল হয়েছে। "} open={open} />}
+      {open && (
+        <ToastMessage
+          message={"পণ্য ক্রয় সফল হয়েছে। "}
+          open={open}
+          handleClose={handleClose}
+        />
+      )}
     </>
   );
 };
