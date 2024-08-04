@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   useTheme,
   Box,
@@ -48,7 +48,6 @@ const Purchases = () => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const weightRef = useRef(null);
   // api url
   const api_url = import.meta.env.VITE_API_URL;
   // calculate weight
@@ -76,8 +75,6 @@ const Purchases = () => {
 
     setWeight("");
     setFocused(true);
-    weightRef.current.accessKey = "Enter";
-    weightRef.current.focus();
   };
   useEffect(() => {
     const calculatedWeight = calculateWeight.slice(1);
@@ -123,6 +120,7 @@ const Purchases = () => {
       setWeight("");
       setTotalInText("");
       setLoading(false);
+      setFocused(false);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -250,7 +248,7 @@ const Purchases = () => {
                 color="secondary"
                 fullWidth
                 size="small"
-                ref={weightRef}
+                focused={focused}
               />
             </Grid>
             <Grid item xs={3} sm={3} md={4}>
@@ -296,26 +294,34 @@ const Purchases = () => {
             marginTop: "20px",
           }}
         >
+          <Box m={"10px 0"}>
+            <Typography variant="h4">মোট ওজনঃ {totalInText}</Typography>
+            <Typography variant="h4" mt="5px">
+              মোট মূল্যঃ {data.total.toLocaleString("bn-BD")} টাকা
+            </Typography>
+          </Box>
           <Box>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
                   <TableRow size="small">
-                    <TableCell>ক্রমিক নং</TableCell>
-                    <TableCell>ওজন</TableCell>
-                    <TableCell align="right">মুছুন</TableCell>
+                    <TableCell sx={{ fontSize: "14px" }}>ক্রমিক নং</TableCell>
+                    <TableCell sx={{ fontSize: "14px" }}>ওজন</TableCell>
+                    <TableCell align="right" sx={{ fontSize: "14px" }}>
+                      মুছুন
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {calculateWeight.slice(1).map((data, index) => (
                     <TableRow key={index}>
-                      <TableCell sx={{ padding: "0px 10px" }}>
+                      <TableCell sx={{ padding: "0 20px", fontSize: "14px" }}>
                         {++index}
                       </TableCell>
-                      <TableCell sx={{ padding: "0px" }}>
+                      <TableCell sx={{ padding: "0px", fontSize: "14px" }}>
                         {data.weightInText}
                       </TableCell>
-                      <TableCell align="right" sx={{ padding: "0px" }}>
+                      <TableCell align="right" sx={{ padding: "0px 10px" }}>
                         <IconButton
                           sx={{ color: colors.redAccent["500"] }}
                           aria-label="delete"
@@ -329,12 +335,6 @@ const Purchases = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </Box>
-          <Box mt={"20px"}>
-            <Typography variant="h4">মোট ওজনঃ {totalInText}</Typography>
-            <Typography variant="h4" mt="5px">
-              মোট মূল্যঃ {data.total.toLocaleString("bn-BD")} টাকা
-            </Typography>
           </Box>
         </Box>
       )}
