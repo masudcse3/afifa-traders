@@ -76,6 +76,7 @@ const Purchases = () => {
 
     setWeight("");
     setFocused(true);
+    weightRef.current.accessKey = "Enter";
     weightRef.current.focus();
   };
   useEffect(() => {
@@ -249,7 +250,6 @@ const Purchases = () => {
                 color="secondary"
                 fullWidth
                 size="small"
-                focused={focused}
                 ref={weightRef}
               />
             </Grid>
