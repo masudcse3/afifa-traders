@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   useTheme,
   Box,
@@ -27,8 +27,9 @@ import ToastMessage from "../../components/utils/Toast";
 const Purchases = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  // use ref for focus weight
-  const inputRef = useRef(null);
+  // auto focus for weight field
+  const [focused, setFocused] = useState(false);
+
   // initail state
   const initialData = {
     name: "",
@@ -70,8 +71,9 @@ const Purchases = () => {
         ).toLocaleString("bn-BD")} কেজি`,
       },
     ]);
+
     setWeight("");
-    inputRef.current.focus();
+    setFocused(true);
   };
   useEffect(() => {
     const calculatedWeight = calculateWeight.slice(1);
@@ -244,7 +246,7 @@ const Purchases = () => {
                 color="secondary"
                 fullWidth
                 size="small"
-                ref={inputRef}
+                focused={focused}
               />
             </Grid>
             <Grid item xs={3} sm={3} md={4}>
