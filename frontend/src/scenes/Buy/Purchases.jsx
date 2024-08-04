@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   useTheme,
   Box,
@@ -47,6 +47,8 @@ const Purchases = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const weightRef = useRef(null);
   // api url
   const api_url = import.meta.env.VITE_API_URL;
   // calculate weight
@@ -74,6 +76,7 @@ const Purchases = () => {
 
     setWeight("");
     setFocused(true);
+    weightRef.current.focus();
   };
   useEffect(() => {
     const calculatedWeight = calculateWeight.slice(1);
@@ -247,6 +250,7 @@ const Purchases = () => {
                 fullWidth
                 size="small"
                 focused={focused}
+                ref={weightRef}
               />
             </Grid>
             <Grid item xs={3} sm={3} md={4}>
