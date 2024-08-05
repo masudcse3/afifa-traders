@@ -28,7 +28,6 @@ const Purchases = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   // auto focus for weight field
-  const [focused, setFocused] = useState(false);
 
   // initail state
   const initialData = {
@@ -74,7 +73,6 @@ const Purchases = () => {
     ]);
 
     setWeight("");
-    setFocused(true);
   };
   useEffect(() => {
     const calculatedWeight = calculateWeight.slice(1);
@@ -120,7 +118,6 @@ const Purchases = () => {
       setWeight("");
       setTotalInText("");
       setLoading(false);
-      setFocused(false);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -248,7 +245,6 @@ const Purchases = () => {
                 color="secondary"
                 fullWidth
                 size="small"
-                focused={focused}
               />
             </Grid>
             <Grid item xs={3} sm={3} md={4}>
