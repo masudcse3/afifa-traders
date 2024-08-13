@@ -43,12 +43,13 @@ const Expenses = () => {
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [name, setName] = useState("");
   const today = new Date();
-
-  const [date, setDate] = useState([
+  const initialDate = [
     dayjs(today).startOf("month"),
     dayjs(today).endOf("month"),
-  ]);
+  ];
+  const [date, setDate] = useState(initialDate);
 
   // handle Change
   const handleChange = (e) => {
@@ -90,7 +91,7 @@ const Expenses = () => {
       const to = dayjs(date[1]).format("YYYY-MM-DD");
       try {
         const response = await axios.get(
-          `${api_url}/expenses?from=${from}&to=${to}`,
+          `${api_url}/expenses?from=${from}&to=${to}&madeBy=${name}`,
           {
             withCredentials: true,
           }
@@ -102,7 +103,14 @@ const Expenses = () => {
       }
     };
     fetchExpenses();
-  }, [submitted, date]);
+  }, [submitted, date, name]);
+
+  const handleToday = () => {
+    setDate([dayjs(), dayjs().add(1, "day")]);
+  };
+  const handleMonth = () => {
+    setDate(initialDate);
+  };
   const dateFormatter = (updatedAt) => {
     const date = new Date(updatedAt);
     const day = date.getDate();
@@ -198,13 +206,49 @@ const Expenses = () => {
       </Box>
 
       {/* All the expenses with filter */}
-      <Button
-        startIcon={<TuneIcon />}
-        color="secondary"
-        variant="outlined"
-        onClick={handleFilterToggle}
-        sx={{ marginTop: "10px" }}
-      ></Button>
+      <Grid
+        spacing={1}
+        container
+        alignItems="center"
+        sx={{
+          marginTop: "10px",
+          background: colors.blueAccent[500],
+          p: "5px 0",
+        }}
+      >
+        <Grid item xs={1}>
+          <TuneIcon onClick={handleFilterToggle} color={colors.grey[400]} />
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="h6" onClick={handleToday}>
+            আজ
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="h6" onClick={handleMonth}>
+            এই মাস
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="h6" onClick={() => setName("Masud")}>
+            মাসুদ
+          </Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <Typography
+            variant="h6"
+            onClick={() => setName("Mufti Solaiman Hosen")}
+          >
+            সোলাইমান
+          </Typography>
+        </Grid>
+        <Grid item xs={1}>
+          <Typography variant="h6" onClick={() => setName("")}>
+            সকল
+          </Typography>
+        </Grid>
+      </Grid>
+
       {filterOpen && (
         <Box
           sx={{
@@ -213,7 +257,7 @@ const Expenses = () => {
             marginTop: "20px",
           }}
         >
-          <Grid container spacing={2}>
+          <Grid container spacing={1} alignItems="center">
             <Grid item xs={12}>
               <BasicDateRangePicker
                 color="secondary"
@@ -221,26 +265,13 @@ const Expenses = () => {
                 onChange={(v) => setDate(v)}
               />
             </Grid>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={3}>
-              <Button color="secondary">Today</Button>
-            </Grid>
-            <Grid item xs={3}>
-              <Button color="secondary">This Month</Button>
-            </Grid>
-            <Grid item xs={4}>
-              <Button color="secondary">From-To</Button>
-            </Grid>
-            <Grid item xs={4}>
-              <Button color="secondary">From-To</Button>
-            </Grid>
           </Grid>
         </Box>
       )}
       {allExpenses.length > 0 && (
         <Box sx={{ marginTop: "20px" }}>
           <Typography variant="h5" align="right" p=" 10px 20px">
-            মোট খরচঃ {totalExpenses}
+            মোট খরচঃ {totalExpenses.toLocaleString("bn-BD")} /=
           </Typography>
           <TableContainer component={Paper}>
             <Table>
