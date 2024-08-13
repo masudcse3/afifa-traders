@@ -1,5 +1,5 @@
 /** @format */
 
 import { addExpenseService } from "./add";
-
-export { addExpenseService };
+import { getExpensesService } from "./get";
+export { addExpenseService, getExpensesService };

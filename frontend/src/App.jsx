@@ -14,6 +14,10 @@ import NotFound from "./scenes/global/NotFound";
 
 import Products from "./scenes/Product/Products";
 import Purchases from "./scenes/Buy/Purchases";
+
+import Expenses from "./scenes/Expenses/Expenses";
+
+import BasicDateRangePicker from "./components/utils/DatePicker";
 function App() {
   const [theme, colorMode] = useMode();
   return (
@@ -30,6 +34,8 @@ function App() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/purchases" element={<Purchases />} />
+                <Route path="/expenses" element={<Expenses />} />
+                <Route path="/date" element={<BasicDateRangePicker />} />
               </Route>
 
               <Route path="/*" element={<NotFound />} />

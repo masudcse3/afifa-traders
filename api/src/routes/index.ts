@@ -43,7 +43,7 @@ import {
   getPaymentInfo,
   getPaymentDetails,
 } from "@/controllers/payment";
-import { addExpense } from "@/controllers/expense";
+import { addExpense, allExpenses } from "@/controllers/expense";
 
 import { calculateProfit } from "@/controllers/profit";
 import {
@@ -92,7 +92,7 @@ router.route("/accounts").get(getAccountInfo);
 router.route("/payments/:id").patch(updatePayment).get(getPaymentDetails);
 router.route("/payments").post(addPayment).get(getPaymentInfo);
 // expense routes
-router.route("/expenses").post(addExpense);
+router.route("/expenses").post(addExpense).get(allExpenses);
 
 // profit routes
 router.route("/profit/:id").patch(calculateProfit);
