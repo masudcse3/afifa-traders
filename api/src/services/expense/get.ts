@@ -10,7 +10,7 @@ export const getExpensesService = async ({ from, to, madeBy }) => {
   const nextDay = new Date(today);
   nextDay.setDate(today.getDate() + 1);
   const query: any = {
-    updatedAt: {
+    createdAt: {
       $gte: from || thisMonth,
       $lte: to || nextDay,
     },
@@ -19,7 +19,7 @@ export const getExpensesService = async ({ from, to, madeBy }) => {
     query.madeBy = madeBy;
   }
   const allExpenses = await Expense.find({ $and: query }).sort({
-    updatedAt: -1,
+    createdAt: -1,
   });
 
   return allExpenses;

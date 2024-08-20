@@ -16,6 +16,7 @@ import Products from "./scenes/Product/Products";
 import Purchases from "./scenes/Buy/Purchases";
 
 import Expenses from "./scenes/Expenses/Expenses";
+import Party from "./scenes/Party/Party";
 
 import BasicDateRangePicker from "./components/utils/DatePicker";
 function App() {
@@ -35,7 +36,7 @@ function App() {
                 <Route path="/products" element={<Products />} />
                 <Route path="/purchases" element={<Purchases />} />
                 <Route path="/expenses" element={<Expenses />} />
-                <Route path="/date" element={<BasicDateRangePicker />} />
+                <Route path="/parties" element={<Party />} />
               </Route>
 
               <Route path="/*" element={<NotFound />} />

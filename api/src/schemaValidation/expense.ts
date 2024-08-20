@@ -7,3 +7,4 @@ export const expenseSchema = z.object({
   amount: z.number(),
   extra: z.boolean().default(false),
 });
+export const updateExpenseSchema = expenseSchema.partial();

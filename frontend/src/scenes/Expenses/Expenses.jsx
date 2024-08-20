@@ -20,6 +20,7 @@ import {
   IconButton,
 } from "@mui/material";
 import TuneIcon from "@mui/icons-material/Tune";
+import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
 import { tokens } from "../../theme";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -44,7 +45,25 @@ const Expenses = () => {
   const [open, setOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [name, setName] = useState("");
+  const [bold, setBold] = useState("Month");
+  const [editOpen, setEditOpen] = useState(false);
+  const [expenseId, setExpenseId] = useState("");
   const today = new Date();
+  const months = [
+    "জানুয়ারি",
+    "ফেব্রুয়ারি",
+    "মার্চ",
+    "এপ্রিল",
+    "মে",
+    "জুন",
+    "জুলাই",
+    "আগস্ট",
+    "সেপ্টেম্বর",
+    "অক্টোবর",
+    "নভেম্বর",
+    "ডিসেম্বার",
+  ];
+  const thisMonth = months[today.getMonth()];
   const initialDate = [
     dayjs(today).startOf("month"),
     dayjs(today).endOf("month"),
@@ -71,16 +90,57 @@ const Expenses = () => {
       setLoading(false);
       setData(initialState);
       setOpen(true);
+      setSubmitted(!submitted);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await axios.patch(`${api_url}/expenses/${expenseId}`, data, {
+        withCredentials: true,
+      });
+      setLoading(false);
+      setData(initialState);
+      setOpen(true);
+      setEditOpen(false);
       setSubmitted(true);
     } catch (error) {
       console.error(error);
     }
+  };
+  // handle the delete event
+  const onDelete = async (id) => {
+    try {
+      const confirmDel = confirm("আপনি নিশ্চিত এই খরচ মুছতে চান?");
+      if (confirmDel) {
+        setLoading(true);
+        await axios.delete(`${api_url}/expenses/${id}`, {
+          withCredentials: true,
+        });
+        setLoading(false);
+        setAllExpenses(allExpenses.filter((expense) => expense._id !== id));
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const onEdit = async (id, title, amount, extra) => {
+    setEditOpen(true);
+    setExpenseId(id);
+    setData({ title: title, amount: amount, extra: extra });
+    setSubmitted(false);
   };
   const handleClose = () => {
     setOpen(false);
   };
   const handleFilterToggle = () => {
     setFilterOpen(!filterOpen);
+    setBold("");
   };
 
   // handle all the expenses
@@ -103,13 +163,15 @@ const Expenses = () => {
       }
     };
     fetchExpenses();
-  }, [submitted, date, name]);
+  }, [submitted, date, name, api_url]);
 
   const handleToday = () => {
     setDate([dayjs(), dayjs().add(1, "day")]);
+    setBold("Today");
   };
   const handleMonth = () => {
     setDate(initialDate);
+    setBold("Month");
   };
   const dateFormatter = (updatedAt) => {
     const date = new Date(updatedAt);
@@ -132,13 +194,11 @@ const Expenses = () => {
   );
   return (
     <>
-      {loading && <Spinner />}
-
       <Box sx={{ background: colors.primary[400], padding: "20px" }}>
         <Typography variant="h4" align="center">
-          নতুন খরচ যোগ করুন
+          {editOpen ? "খরচ পরিবর্তন করুন" : "নতুন খরচ যোগ করুন"}
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={editOpen ? handleEditSubmit : handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
@@ -178,7 +238,7 @@ const Expenses = () => {
                 alignItems: "center",
               }}
             >
-              <Typography>অতিরিক্ত খরচ?</Typography>
+              <Typography>পেয়ারা চাষ</Typography>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -196,9 +256,9 @@ const Expenses = () => {
                 variant="contained"
                 type="submit"
                 fullWidth
-                sx={{ height: "40px" }}
+                sx={{ height: "40px", color: "white" }}
               >
-                যোগ করুন
+                {editOpen ? "পরিবর্তন করুন" : "যোগ করুন"}
               </Button>
             </Grid>
           </Grid>
@@ -220,30 +280,67 @@ const Expenses = () => {
           <TuneIcon onClick={handleFilterToggle} color={colors.grey[400]} />
         </Grid>
         <Grid item xs={2}>
-          <Typography variant="h6" onClick={handleToday}>
+          <Typography
+            variant="h6"
+            onClick={handleToday}
+            sx={{
+              fontWeight: bold === "Today" ? "bold" : "normal",
+              fontSize: bold === "Today" ? "16px" : "normal",
+              cursor: "pointer",
+            }}
+          >
             আজ
           </Typography>
         </Grid>
         <Grid item xs={2}>
-          <Typography variant="h6" onClick={handleMonth}>
-            এই মাস
+          <Typography
+            variant="h6"
+            onClick={handleMonth}
+            sx={{
+              fontWeight: bold === "Month" ? "bold" : "normal",
+              fontSize: bold === "Month" ? "16px" : "normal",
+              cursor: "pointer",
+            }}
+          >
+            {thisMonth}
           </Typography>
         </Grid>
         <Grid item xs={2}>
-          <Typography variant="h6" onClick={() => setName("Masud")}>
+          <Typography
+            variant="h6"
+            onClick={() => setName("Masud Rana")}
+            sx={{
+              cursor: "pointer",
+              fontWeight: name === "Masud Rana" ? "bold" : "normal",
+              fontSize: name === "Masud Rana" ? "16px" : "normal",
+            }}
+          >
             মাসুদ
           </Typography>
         </Grid>
         <Grid item xs={3}>
           <Typography
             variant="h6"
+            sx={{
+              cursor: "pointer",
+              fontWeight: name === "Mufti Solaiman Hosen" ? "bold" : "normal",
+              fontSize: name === "Mufti Solaiman Hosen" ? "16px" : "normal",
+            }}
             onClick={() => setName("Mufti Solaiman Hosen")}
           >
             সোলাইমান
           </Typography>
         </Grid>
         <Grid item xs={1}>
-          <Typography variant="h6" onClick={() => setName("")}>
+          <Typography
+            variant="h6"
+            onClick={() => setName("")}
+            sx={{
+              cursor: "pointer",
+              fontWeight: name === "" ? "bold" : "normal",
+              fontSize: name === "" ? "16px" : "normal",
+            }}
+          >
             সকল
           </Typography>
         </Grid>
@@ -268,6 +365,7 @@ const Expenses = () => {
           </Grid>
         </Box>
       )}
+      {loading && <Spinner />}
       {allExpenses.length > 0 && (
         <Box sx={{ marginTop: "20px" }}>
           <Typography variant="h5" align="right" p=" 10px 20px">
@@ -304,8 +402,8 @@ const Expenses = () => {
                 {allExpenses.map((expenses, index) => (
                   <TableRow key={index}>
                     <TableCell sx={{ padding: "5px 8px", fontSize: "14px" }}>
-                      {dateFormatter(expenses.updatedAt).date} <br />
-                      {dateFormatter(expenses.updatedAt).time}
+                      {dateFormatter(expenses.createdAt).date} <br />
+                      {dateFormatter(expenses.createdAt).time}
                     </TableCell>
                     <TableCell sx={{ padding: "0px", fontSize: "14px" }}>
                       {expenses.title}
@@ -320,15 +418,28 @@ const Expenses = () => {
                       {expenses.amount.toLocaleString("bn-BD")}
                     </TableCell>
 
-                    <TableCell
-                      align="right"
-                      sx={{ padding: "0px", fontSize: "14px" }}
-                    >
+                    <TableCell align="right" sx={{ padding: "0px" }}>
+                      <IconButton
+                        aria-label="edit"
+                        onClick={() =>
+                          onEdit(
+                            expenses._id,
+                            expenses.title,
+                            expenses.amount,
+                            expenses.extra
+                          )
+                        }
+                      >
+                        <EditNoteOutlinedIcon
+                          fontSize="large"
+                          sx={{ color: colors.blueAccent[500] }}
+                        />
+                      </IconButton>
                       <IconButton
                         aria-label="delete"
-                        onClick={() => onDelete(product._id)}
+                        onClick={() => onDelete(expenses._id)}
                       >
-                        <DeleteIcon />
+                        <DeleteIcon sx={{ color: colors.redAccent[500] }} />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -339,7 +450,7 @@ const Expenses = () => {
         </Box>
       )}
       <ToastMessage
-        message="খরচ যোগ সফল হয়েছে।"
+        message={"খরচ যোগ সফল হয়েছে।"}
         open={open}
         handleClose={handleClose}
       />

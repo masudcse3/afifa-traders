@@ -17,7 +17,10 @@ export const getPartyService = async ({ s = "", page, limit }) => {
     totalPages !== 0 ? (page > totalPages ? totalPages : page) : 1;
   const skip = (currentPage - 1) * limit;
 
-  const parties = await Party.find(query).skip(skip).limit(limit);
+  const parties = await Party.find(query)
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 });
   if (!parties) {
     const err: any = new Error("No party found");
     err.status = 404;
